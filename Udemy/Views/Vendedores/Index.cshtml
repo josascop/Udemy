@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Udemy.Models.Vendedor>
+
+@{
+    ViewData["Title"] = "Vendedores";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-default btn-outline-dark">Adicionar</a>
+</p>
+
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Data de nascimento</th>
+        <th>Salário base</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var i in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => i.Nome)</td>
+            <td>@Html.DisplayFor(modelItem => i.Email)</td>
+            <td>@Html.DisplayFor(modelItem => i.DataDeNascimento)</td>
+            <td>@Html.DisplayFor(modelItem => i.Salariobase)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@i.Id">Editar</a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@i.Id">Detalhes</a>
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@i.Id">Excluir</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
