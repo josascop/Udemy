@@ -1,0 +1,50 @@
+﻿@model Udemy.Models.Vendedor
+
+@{
+    ViewData["Title"] = "Detalhes";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>Vendedor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model=>model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model=>model.Nome)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model=>model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model=>model.Email)
+        </dd>
+        <dt>
+            Data de nascimento
+        </dt>
+        <dd>
+            @Html.DisplayFor(model=>model.DataDeNascimento)
+        </dd>
+        <dt>
+            Salário base
+        </dt>
+        <dd>
+            @Html.DisplayFor(model=>model.Salariobase)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model=>model.Departamento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model=>model.Departamento.Nome)
+        </dd>
+    </dl>
+    <hr />
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-default">Editar</a>
+    <a asp-action="Index">Voltar</a>
+</div>
