@@ -1,12 +1,21 @@
-﻿namespace Udemy.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Udemy.Models;
 
 public class Vendedor {
     public int Id { get; set; }
     public string Nome { get; set; }
+
+    [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
+
+    [Display(Name = "Salário base")]
     public decimal Salariobase { get; set; }
+
+    [Display(Name = "Data de nascimento"), DataType(DataType.Date)]
     public DateTime DataDeNascimento { get; set; }
     public Departamento Departamento { get; set; }
+    [Display(Name = "Departamento")]
     public int DepartamentoId { get; set; }
     public ICollection<RegistroDeVenda> Vendas { get; set; } = new List<RegistroDeVenda>();
 

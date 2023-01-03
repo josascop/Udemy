@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Udemy.Data;
 using Udemy.Services;
 
@@ -15,6 +17,14 @@ builder.Services.AddScoped<DepartamentoService>();
 
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+var pt = new CultureInfo("pt-BR");
+app.UseRequestLocalization(new RequestLocalizationOptions {
+    DefaultRequestCulture = new RequestCulture(pt),
+    SupportedCultures = new List<CultureInfo> { pt },
+    SupportedUICultures = new List<CultureInfo> { pt },
+});
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
