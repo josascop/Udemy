@@ -12,33 +12,33 @@ public class VendedorService {
         _ctx = ctx;
     }
 
-    public List<Vendedor> BuscarTodos() {
-        return _ctx.Vendedor.ToList();
+    async public Task<List<Vendedor>> BuscarTodos() {
+        return await _ctx.Vendedor.ToListAsync();
     }
 
-    public void Inserir(Vendedor vnd) {
+    async public Task Inserir(Vendedor vnd) {
         _ctx.Add(vnd);
-        _ctx.SaveChanges();
+        await _ctx.SaveChangesAsync();
     }
 
-    public Vendedor? BuscarPorId(int id) {
-        return _ctx.Vendedor.Include(vnd => vnd.Departamento).FirstOrDefault(vnd => vnd.Id == id);
+    async public Task<Vendedor?> BuscarPorId(int id) {
+        return await _ctx.Vendedor.Include(vnd => vnd.Departamento).FirstOrDefaultAsync(vnd => vnd.Id == id);
     }
 
-    public void Remover(int id) {
-        var v = _ctx.Vendedor.Find(id);
+    async public Task Remover(int id) {
+        var v = await _ctx.Vendedor.FindAsync(id);
         if (v is null) return;
         _ctx.Vendedor.Remove(v);
-        _ctx.SaveChanges();
+        await _ctx.SaveChangesAsync();
     }
 
-    public void Atualizar(Vendedor vnd) {
-        if (!_ctx.Vendedor.Any(v => v.Id == vnd.Id))
+    async public Task Atualizar(Vendedor vnd) {
+        if (!await _ctx.Vendedor.AnyAsync(v => v.Id == vnd.Id))
             throw new NotFoundException("Id não encontrado");
 
         try {
             _ctx.Update(vnd);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException e) {
             throw new DBConcurrencyException(e.Message);

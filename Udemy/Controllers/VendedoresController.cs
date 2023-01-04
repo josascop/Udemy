@@ -17,29 +17,30 @@ public class VendedoresController : Controller {
     }
 
     // GET
-    public IActionResult Index() {
+    async public Task<IActionResult> Index() {
         // exibe todos os vendedores do banco de dados
-        return View(_vendedorService.BuscarTodos());
+        return View(await _vendedorService.BuscarTodos());
     }
 
     // página de criação
-    public IActionResult Create() {
-        var modelo = new VendedorFormViewModel { Departamentos = _departamentoService.BuscarTodos() };
+    async public Task<IActionResult> Create() {
+        var modelo = new VendedorFormViewModel { Departamentos = await _departamentoService.BuscarTodos() };
         return View(modelo);
     }
 
     // ação de criação
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(VendedorFormViewModel modelo) {
-        _vendedorService.Inserir(modelo.Vendedor);
+    async public Task<IActionResult> Create(VendedorFormViewModel modelo) {
+        if (!ModelState.IsValid) return View(modelo);
+        await _vendedorService.Inserir(modelo.Vendedor);
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Delete(int? id) {
+    async public Task<IActionResult> Delete(int? id) {
         if (id is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Id inválido" });
 
-        Vendedor? v = _vendedorService.BuscarPorId(id.Value);
+        Vendedor? v = await _vendedorService.BuscarPorId(id.Value);
         if (v is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Vendedor não encontrado" });
 
         return View(v);
@@ -47,26 +48,26 @@ public class VendedoresController : Controller {
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Delete(int id) {
-        _vendedorService.Remover(id);
+    async public Task<IActionResult> Delete(int id) {
+        await _vendedorService.Remover(id);
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Details(int? id) {
+    async public Task<IActionResult> Details(int? id) {
         if (id is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Id inválido" });
 
-        Vendedor? v = _vendedorService.BuscarPorId(id.Value);
+        Vendedor? v = await _vendedorService.BuscarPorId(id.Value);
         if (v is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Vendedor não encontrado" });
 
         return View(v);
     }
 
-    public IActionResult Edit(int? id) {
+    async public Task<IActionResult> Edit(int? id) {
         if (id is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Id inválido" });
 
-        Vendedor? v = _vendedorService.BuscarPorId(id.Value);
+        Vendedor? v = await _vendedorService.BuscarPorId(id.Value);
         if (v is null) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Vendedor não encontrado" });
-        List<Departamento> deps = _departamentoService.BuscarTodos();
+        List<Departamento> deps = await _departamentoService.BuscarTodos();
         var modelo = new VendedorFormViewModel { Vendedor = v, Departamentos = deps };
 
         return View(modelo);
@@ -74,11 +75,12 @@ public class VendedoresController : Controller {
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, VendedorFormViewModel modelo) {
+    async public Task<IActionResult> Edit(int id, VendedorFormViewModel modelo) {
+        if (!ModelState.IsValid) return View(modelo);
         if (id != modelo.Vendedor.Id) return RedirectToAction(nameof(Error), new ErrorViewModel { Message = "Os ids não são iguais" });
 
         try {
-            _vendedorService.Atualizar(modelo.Vendedor);
+            await _vendedorService.Atualizar(modelo.Vendedor);
             return RedirectToAction(nameof(Index));
         }
         catch (ApplicationException e) { return RedirectToAction(nameof(Error), new ErrorViewModel { Message = e.Message }); }
