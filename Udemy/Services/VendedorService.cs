@@ -26,10 +26,14 @@ public class VendedorService {
     }
 
     async public Task Remover(int id) {
-        var v = await _ctx.Vendedor.FindAsync(id);
-        if (v is null) return;
-        _ctx.Vendedor.Remove(v);
-        await _ctx.SaveChangesAsync();
+        try {
+            var v = await _ctx.Vendedor.FindAsync(id);
+            if (v is null) return;
+            _ctx.Vendedor.Remove(v);
+            await _ctx.SaveChangesAsync();
+        }
+        catch (DbUpdateException e) { throw new IntegrityException(e.Message); }
+
     }
 
     async public Task Atualizar(Vendedor vnd) {
